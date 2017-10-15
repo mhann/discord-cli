@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Rivalo/discordgo_cli"
+	"github.com/bwmarrin/discordgo"
 	"github.com/fatih/color"
 )
 
@@ -84,7 +84,7 @@ func PrintMessages(Amount int) {
 
 			for _, Msg := range Messages {
 				//log.Printf("> %s > %s\n", UserName(m.Author.Username), Msg)
-				MessagePrint(m.Timestamp, m.Author.Username, Msg)
+				MessagePrint(string(m.Timestamp), m.Author.Username, Msg)
 
 			}
 		}

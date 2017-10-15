@@ -4,7 +4,7 @@ package DiscordState
 import (
 	"fmt"
 
-	"github.com/Rivalo/discordgo_cli"
+	"github.com/bwmarrin/discordgo"
 )
 
 //!----- Session -----!//
@@ -32,12 +32,23 @@ func (Session *Session) Start() error {
 	dg.Open()
 
 	//Retrieve GuildID's from current User
-	UserGuilds, err := dg.UserGuilds()
+	UserGuilds, err := dg.UserGuilds(100, "", "") // Max user guilds - should be put in config file somewhere.
 	if err != nil {
 		return err
 	}
 
-	Session.Guilds = UserGuilds
+	Guilds := []*discordgo.Guild{}
+
+	for _, userGuild := range UserGuilds {
+		guild, err := Session.userGuildToGuild(userGuild.ID)
+		if err != nil {
+			return err
+		}
+
+		Guilds = append(Guilds, guild)
+	}
+
+	Session.Guilds = Guilds
 
 	Session.DiscordGo = dg
 
@@ -46,6 +57,11 @@ func (Session *Session) Start() error {
 	fmt.Printf(" PASSED!\n")
 
 	return nil
+}
+
+func (Session *Session) userGuildToGuild(GuildID string) (*discordgo.Guild, error) {
+	Guild, err := Session.DiscordGo.Guild(GuildID)
+	return Guild, err
 }
 
 //NewState (constructor) attaches a new state to the Guild inside a Session, and fills it.
@@ -113,11 +129,23 @@ func (Session *Session) NewState(GuildID string, MessageAmount int) (*State, err
 
 //Update updates the session, this reloads the Guild list
 func (Session *Session) Update() error {
-	UserGuilds, err := Session.DiscordGo.UserGuilds()
+	UserGuilds, err := Session.DiscordGo.UserGuilds(100, "", "")
 	if err != nil {
 		return err
 	}
 
-	Session.Guilds = UserGuilds
+	Guilds := []*discordgo.Guild{}
+
+	for _, userGuild := range UserGuilds {
+		guild, err := Session.userGuildToGuild(userGuild.ID)
+		if err != nil {
+			return err
+		}
+
+		Guilds = append(Guilds, guild)
+	}
+
+	Session.Guilds = Guilds
+
 	return nil
 }

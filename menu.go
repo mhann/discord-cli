@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"strconv"
+
+	"github.com/bwmarrin/discordgo"
 )
 
 //SelectGuildMenu is a menu item that creates a new State on basis of Guild selection
@@ -58,7 +60,7 @@ Start:
 	SelectID := 0
 
 	for _, channel := range State.Channels {
-		if channel.Type == "text" {
+		if channel.Type == discordgo.ChannelTypeGuildText {
 			SelectMap[SelectID] = channel.ID
 			Msg(TextMsg, "[%d] %s\n", SelectID, channel.Name)
 			SelectID++

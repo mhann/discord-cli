@@ -3,7 +3,7 @@ package main
 import (
 	"strings"
 
-	"github.com/Rivalo/discordgo_cli"
+	"github.com/bwmarrin/discordgo"
 )
 
 // This function will be called (due to AddHandler above) every time a new
@@ -27,7 +27,7 @@ func newMessage(s *discordgo.Session, m *discordgo.MessageCreate) {
 		Messages := ReceivingMessageParser(m.Message)
 
 		for _, Msg := range Messages {
-			MessagePrint(m.Timestamp, m.Author.Username, Msg)
+			MessagePrint(string(m.Timestamp), m.Author.Username, Msg)
 			//log.Printf("> %s > %s\n", UserName(m.Author.Username), Msg)
 		}
 	}
