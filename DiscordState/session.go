@@ -40,7 +40,7 @@ func (Session *Session) Start() error {
 	Guilds := []*discordgo.Guild{}
 
 	for _, userGuild := range UserGuilds {
-		guild, err := Session.userGuildToGuild(userGuild.ID)
+		guild, err := userGuildToGuild(userGuild.ID, dg)
 		if err != nil {
 			return err
 		}
@@ -59,8 +59,8 @@ func (Session *Session) Start() error {
 	return nil
 }
 
-func (Session *Session) userGuildToGuild(GuildID string) (*discordgo.Guild, error) {
-	Guild, err := Session.DiscordGo.Guild(GuildID)
+func userGuildToGuild(GuildID string, Session *discordgo.Session) (*discordgo.Guild, error) {
+	Guild, err := Session.Guild(GuildID)
 	return Guild, err
 }
 
@@ -137,7 +137,7 @@ func (Session *Session) Update() error {
 	Guilds := []*discordgo.Guild{}
 
 	for _, userGuild := range UserGuilds {
-		guild, err := Session.userGuildToGuild(userGuild.ID)
+		guild, err := userGuildToGuild(userGuild.ID, Session.DiscordGo)
 		if err != nil {
 			return err
 		}
